@@ -5,11 +5,11 @@ metadata:
   name: clairctl
   labels:
     purpose: testing
+    app: clair
 spec:
   containers:
   - name: clairctl
     imagePullPolicy: Always 
     image: sudermanjr/clairctl:latest
-    # Just spin & wait forever
-    command: [ "/bin/sh", "-c", "--" ]
-    args: [ "while true; do sleep 30; done;" ]
+    securityContext:
+      privileged: true
