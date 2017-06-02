@@ -1,6 +1,6 @@
 FROM alpine:latest
 
-RUN apk add --update curl && \
+RUN apk add --update curl docker && \
     rm -rf /var/cache/apk/*
 
 COPY ${PWD}/.clairctl.yml ./.clairctl.yml
