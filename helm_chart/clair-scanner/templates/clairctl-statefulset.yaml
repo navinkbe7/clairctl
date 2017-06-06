@@ -38,6 +38,16 @@ spec:
           name: reports
         - mountPath: /usr/local/etc/php/
           name: php-config
+        - mountPath: /config/index.php
+          name: index-php
+        lifecycle:
+          postStart:
+            exec:
+              command:
+                - ln
+                - -s
+                - /config/index.php
+                - /var/www/html/index.php
       volumes:
       - name: clairctl-config
         configMap:
@@ -45,6 +55,9 @@ spec:
       - name: php-config
         configMap:
           name: {{ template "fullname" . }}-php
+      - name: index-php
+        configMap:
+          name: {{ template "fullname" . }}-index-php
   volumeClaimTemplates:
   - metadata:
       name: reports
