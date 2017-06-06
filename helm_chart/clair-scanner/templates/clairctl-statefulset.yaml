@@ -1,0 +1,57 @@
+---
+apiVersion: apps/v1beta1
+kind: StatefulSet
+metadata:
+  name: {{ template "fullname" . }}-clairctl
+  labels:
+    chart: "{{ .Chart.Name }}-{{ .Chart.Version | replace "+" "_" }}"
+    app: {{ template "fullname" . }}
+    role: clairctl
+spec:
+  serviceName: {{ template "fullname" . }}-clairctl
+  replicas: {{ .Values.replicaCount }}
+  template:
+    metadata:
+      labels:
+        app: {{ template "fullname" . }}
+        role: clairctl
+    spec:
+      containers:
+      - name: {{ template "fullname" . }}-clairctl
+        imagePullPolicy: Always
+        image: sudermanjr/clairctl:latest
+        securityContext:
+          privileged: true
+        volumeMounts:
+        - mountPath: /reports
+          name: reports
+        - mountPath: /root
+          name: clairctl-config
+      - name: {{ template "fullname" . }}-nginx
+        imagePullPolicy: Always
+        image: php:7-apache
+        ports:
+        - containerPort: 80
+          name: nginx-port
+        volumeMounts:
+        - mountPath: /var/www
+          name: reports
+        - mountPath: /usr/local/etc/php/
+          name: nginx-config
+      volumes:
+      - name: clairctl-config
+        configMap:
+          name: {{ template "fullname" . }}-clairctl
+      - name: nginx-config
+        configMap:
+          name: {{ template "fullname" . }}-nginx
+  volumeClaimTemplates:
+  - metadata:
+      name: reports
+      annotations:
+        volume.alpha.kubernetes.io/storage-class: anything
+    spec:
+      accessModes: [ "ReadWriteOnce" ]
+      resources:
+        requests:
+          storage: 10Gi

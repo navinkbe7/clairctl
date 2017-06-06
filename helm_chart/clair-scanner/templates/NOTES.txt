@@ -1,0 +1,15 @@
+How to run the Clair System
+
+First, get the name of the clairctl pod:
+      export POD_NAME=$(kubectl get pods --namespace {{ .Release.Namespace }} -l "app={{ template "fullname" . }},role=clairctl"  -o jsonpath="{.items[0].metadata.name}")
+
+1. You can check on the health of the clair system by running:
+      kubectl -n {{ .Release.Namespace }} exec -c {{ template "fullname" . }}-clairctl -it $POD_NAME clairctl health
+2. Clairctl is running in that pod.  You can exec to that in order to run other commands against Clair and diagnose things.
+      kubectl -n {{ .Release.Namespace }} exec -it $POD_NAME sh
+3. Analyze a container:
+      kubectl -n {{ .Release.Namespace }} exec -c {{ template "fullname" . }}-clairctl -it $POD_NAME clairctl analyze <full container path>
+4. Analyze a container and create a report:
+      kubectl -n {{ .Release.Namespace }} exec -c {{ template "fullname" . }}-clairctl -it $POD_NAME clairctl report <full container path>
+5. You should be able to port-forward to the pod and see the report
+      kubectl -n {{ .Release.Namespace }} port-forward $POD_NAME 8080:80

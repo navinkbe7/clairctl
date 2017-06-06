@@ -1,0 +1,43 @@
+apiVersion: apps/v1beta1
+kind: StatefulSet
+metadata:
+  name: {{ template "fullname" . }}-postgres
+  labels:
+    chart: "{{ .Chart.Name }}-{{ .Chart.Version | replace "+" "_" }}"
+    app: {{ template "fullname" . }}
+    role: database
+spec:
+  serviceName: {{ template "fullname" . }}-postgres
+  replicas: {{ .Values.replicaCount }}
+  template:
+    metadata:
+      labels:
+        app: {{ template "fullname" . }}
+        role: database
+    spec:
+      containers:
+      - name: {{ template "fullname" . }}-postgres
+        imagePullPolicy: Always
+        image: postgres:9.6-alpine
+        env:
+        - name: POSTGRES_PASSWORD
+          value: {{ .Values.postgres.password }}
+        - name: PGDATA
+          value: /var/lib/postgresql/data/pgdata
+        ports:
+        - containerPort: 5432
+          name: postgres-port
+        volumeMounts:        
+        - mountPath: /var/lib/postgresql/data/pgdata
+          subPath: postgresql-db
+          name: data
+  volumeClaimTemplates:
+  - metadata:
+      name: data
+      annotations:
+        volume.alpha.kubernetes.io/storage-class: anything
+    spec:
+      accessModes: [ "ReadWriteOnce" ]
+      resources:
+        requests:
+          storage: 50Gi

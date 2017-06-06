@@ -1,0 +1,49 @@
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  labels:
+    app: clair
+    chart: "{{ .Chart.Name }}-{{ .Chart.Version }}"
+    heritage: "{{ .Release.Service }}"
+    release: "{{ .Release.Name }}"
+  name: {{ template "fullname" . }}-nginx
+data:
+  php.ini: |
+    engine = On
+    short_open_tag = Off
+    asp_tags = Off
+    precision = 14
+    y2k_compliance = On
+    output_buffering = 4096
+    zlib.output_compression = Off
+    implicit_flush = Off
+    unserialize_callback_func =
+    serialize_precision = 100
+    allow_call_time_pass_reference = Off
+    safe_mode = Off
+    safe_mode_gid = Off
+    safe_mode_include_dir =
+    safe_mode_exec_dir =
+    safe_mode_allowed_env_vars = PHP_
+    safe_mode_protected_env_vars = LD_LIBRARY_PATH
+    disable_functions =
+    disable_classes =
+    zend.enable_gc = On
+    expose_php = On
+    max_execution_time = 30
+    max_input_time = 60
+    memory_limit = 128M
+    error_reporting = E_ALL | E_STRICT
+    display_errors = On
+    display_startup_errors = On
+    log_errors = On
+    log_errors_max_len = 1024
+    ignore_repeated_errors = Off
+    ignore_repeated_source = Off
+    report_memleaks = On
+    track_errors = On
+    html_errors = On
+    error_log = php_errors.log
+    doc_root = /var/www/html
+    user_dir =
