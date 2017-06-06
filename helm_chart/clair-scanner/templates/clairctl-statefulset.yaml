@@ -15,6 +15,50 @@ spec:
       labels:
         app: {{ template "fullname" . }}
         role: clairctl
+      annotations:
+        pod.beta.kubernetes.io/init-containers: '[
+              {
+                "name": "var-www",
+                "image": "busybox",
+                "command": [
+                  "mkdir",
+                  "-p",
+                  "/var/www/html"
+                ],
+                "volumeMounts": [
+                  {
+                    "name": "index-php",
+                    "mountPath": "/config"
+                  },
+                  {
+                    "name": "reports",
+                    "mountPath": "/var/www/"
+                  }
+                ]
+              },
+              {
+                "name": "index-php",
+                "image": "busybox",
+                "command": [
+                  "cp",
+                  "-u",
+                  "/config/index.php",
+                  "/var/www/html/index.php"
+                ],
+                "volumeMounts": [
+                  {
+                    "name": "index-php",
+                    "mountPath": "/config"
+                  },
+                  {
+                    "name": "reports",
+                    "mountPath": "/var/www/"
+                  }
+                ]
+              }
+
+
+        ]'
     spec:
       containers:
       - name: {{ template "fullname" . }}-clairctl
@@ -38,16 +82,6 @@ spec:
           name: reports
         - mountPath: /usr/local/etc/php/
           name: php-config
-        - mountPath: /config/index.php
-          name: index-php
-        lifecycle:
-          postStart:
-            exec:
-              command:
-                - ln
-                - -s
-                - /config/index.php
-                - /var/www/html/index.php
       volumes:
       - name: clairctl-config
         configMap:
