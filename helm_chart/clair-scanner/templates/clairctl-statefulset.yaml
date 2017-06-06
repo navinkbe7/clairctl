@@ -27,24 +27,24 @@ spec:
           name: reports
         - mountPath: /root
           name: clairctl-config
-      - name: {{ template "fullname" . }}-nginx
+      - name: {{ template "fullname" . }}-php
         imagePullPolicy: Always
         image: php:7-apache
         ports:
         - containerPort: 80
-          name: nginx-port
+          name: php-port
         volumeMounts:
         - mountPath: /var/www
           name: reports
         - mountPath: /usr/local/etc/php/
-          name: nginx-config
+          name: php-config
       volumes:
       - name: clairctl-config
         configMap:
           name: {{ template "fullname" . }}-clairctl
-      - name: nginx-config
+      - name: php-config
         configMap:
-          name: {{ template "fullname" . }}-nginx
+          name: {{ template "fullname" . }}-php
   volumeClaimTemplates:
   - metadata:
       name: reports
