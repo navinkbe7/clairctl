@@ -10,9 +10,5 @@ RUN apk add --update=yes curl
 # Install clairctl
 RUN curl -L https://raw.githubusercontent.com/jgsqware/clairctl/master/install.sh | sh
 
-# Create a directory for the reports.  Needed for use by helm chart later.
-# Otherwise clairctl will create this for us.
-RUN mkdir -p /reports/html
-
 # Change workdir to /root so that the config will get picked up
 WORKDIR /root
