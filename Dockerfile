@@ -8,7 +8,8 @@ COPY ${PWD}/clairctl.yml /root/clairctl.yml
 RUN apk add --update=yes curl
 
 # Install clairctl
-RUN curl -L https://raw.githubusercontent.com/jgsqware/clairctl/master/install.sh | sh
+RUN curl https://raw.githubusercontent.com/jgsqware/clairctl/master/install.sh -o install.sh
+RUN sh install.sh
 
 # Change workdir to /root so that the config will get picked up
 WORKDIR /root
