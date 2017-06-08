@@ -9,8 +9,8 @@ metadata:
 spec:
   type: {{ .Values.service.type }}
   ports:
-  - port: {{ .Values.service.servicePort1 }}
-    targetPort: 6060
+  - port: 80
+    targetPort: 80
     protocol: TCP
     name: clairctl-port
   selector:

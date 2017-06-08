@@ -7,18 +7,11 @@ image:
   tag: latest
   pullPolicy: Always
 service:
-  name: clair
   type: ClusterIP
   servicePort1: 6060
   servicePort2: 6061
-ingress:
-  enabled: false
-  # Used to create Ingress record (should used with service.type: ClusterIP).
-  hosts:
-    - chart-example.local
-  annotations:
-    # kubernetes.io/ingress.class: nginx
-    # kubernetes.io/tls-acme: "true"
+clairctl:
+  vhost: clair.yourdomain.com
 # resources:
 #   limits:
 #     cpu: 100m
